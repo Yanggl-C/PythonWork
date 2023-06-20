@@ -11,8 +11,8 @@ README
     * 运行
 * [QTest](#文本)
     * UI代码
-* [QTest](#文本)
-    * UI代码
+* [ThresholdWindow](#文本)
+    * Threshold算法参数UI
 * [链接](#链接)
     * 锚点
     * [图片链接](#图片链接)
