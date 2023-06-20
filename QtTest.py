@@ -283,7 +283,6 @@ class Ui_MainWindow(object):
         self.dialog = ThresholdWindow.Ui_ThresholdWindow()
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.Signal_OneParameter.connect(self.thresholdValchange)
-        self.dialog.Signal_OneParameter.connect(self.thresholdMaxValchange)
         #dialog.exec_()
         self.dialog.show()
 
@@ -294,15 +293,10 @@ class Ui_MainWindow(object):
         algorithm = Algorithm()
         thre_img = algorithm.Threshold(self.img_cp,val,max,flag)
         if thre_img is not None:
-            self.show_img(False,thre_img,self.lab_showImg)
-    def thresholdMaxValchange(self,val,max,flag):
-        if self.flag_thresholdMax == False:
-            self.flag_thresholdMax = True
-            return
-        algorithm = Algorithm()
-        thre_img = algorithm.Threshold(self.img_cp,val,max,flag)
-        if thre_img is not None:
-            self.show_img(False,thre_img,self.lab_showImg)
+            if flag == 8 or flag ==16:
+                self.show_img(True,thre_img,self.lab_showImg)
+            else:
+                self.show_img(False,thre_img,self.lab_showImg)
     def is_contains_chinese(self, strs):
         '''
         是否有中文字符
@@ -558,10 +552,14 @@ class Algorithm(object):
 
             if type == 8 :
                 rec_img = cv2.cvtColor(rec_img, cv2.COLOR_BGR2GRAY)
-                _, thre_img = cv2.threshold(rec_img, thresh, maxval, 0|8)
+                num, thre_img = cv2.threshold(rec_img, thresh, maxval, 0|8)
+                cv2.putText(thre_img, 'AutoThreshold{}'.format(int(num)), (10, 500), cv2.FONT_HERSHEY_SIMPLEX,
+                            0.5, (0, 0, 255), 1)
             elif type ==16 :
                 rec_img = cv2.cvtColor(rec_img, cv2.COLOR_BGR2GRAY)
-                _, thre_img = cv2.threshold(rec_img, thresh, maxval, 0|16)
+                num, thre_img = cv2.threshold(rec_img, thresh, maxval, 0|16)
+                cv2.putText(thre_img, 'AutoThreshold{}'.format(int(num)), (10, 500), cv2.FONT_HERSHEY_SIMPLEX,
+                            0.5, (0, 0, 255), 1)
             else:
                 _,thre_img  = cv2.threshold(rec_img, thresh, maxval,type)
             return thre_img

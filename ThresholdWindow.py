@@ -39,12 +39,6 @@ class Ui_ThresholdWindow(QDialog):
         lbl.setText('标志:')
         layout.addWidget(lbl)
         self.com_box = QtWidgets.QComboBox()
-        # import  json
-        # file_json = os.path.join(BASE_DIR,'db',"Threshold.json")
-        # with open(file_json, "r",encoding='utf-8') as f:
-        #     data = f.read()
-        # data_list = json.loads(data)
-        # com_box.addItems(data_list)
         self.threshold_flag = {}
         file_xml = ET.parse(os.path.join(BASE_DIR,'db',"Threshold.xml"))
         if file_xml:
@@ -55,9 +49,17 @@ class Ui_ThresholdWindow(QDialog):
             self.threshold_flag[strN] = int(data.get('Index'))
         layout.addWidget(self.com_box)
 
+        #添加标签
+        lab_layout = QHBoxLayout()
         lbl = QLabel()
         lbl.setText('阈值:')
-        layout.addWidget(lbl)
+        lab_layout.addWidget(lbl)
+        lab_layout.addStretch()
+        #添加数值显示标签
+        self.valshow = QLabel()
+        self.valshow.setText('0')
+        lab_layout.addWidget(self.valshow)
+        layout.addLayout(lab_layout)
 
         self.tb_thresholdVal = QtWidgets.QSlider(Qt.Horizontal)
         self.tb_thresholdVal.setGeometry(QtCore.QRect(60,60,241,22))
@@ -69,9 +71,16 @@ class Ui_ThresholdWindow(QDialog):
         #tb_threshold.setOrientation(Qt.Horizontal)
         layout.addWidget(self.tb_thresholdVal)
 
+        #添加标签
+        max_layout = QHBoxLayout()
         lbl = QLabel()
         lbl.setText('最大值:')
-        layout.addWidget(lbl)
+        max_layout.addWidget(lbl)
+        max_layout.addStretch()
+        # 添加数值显示标签
+        self.maxshow = QLabel('255')
+        max_layout.addWidget(self.maxshow)
+        layout.addLayout(max_layout)
 
         self.tb_thresholdMax = QtWidgets.QSlider(Qt.Horizontal)
         self.tb_thresholdMax.setGeometry(QtCore.QRect(60,60,241,22))
@@ -79,7 +88,7 @@ class Ui_ThresholdWindow(QDialog):
         self.tb_thresholdMax.setMaximum(255)
         self.tb_thresholdMax.setValue(255)
         self.tb_thresholdMax.setSingleStep(1)
-        self.tb_thresholdMax.valueChanged.connect(self.thresholdMaxvalchange)
+        self.tb_thresholdMax.valueChanged.connect(self.thresholdvalchange)
         #tb_threshold.setOrientation(Qt.Horizontal)
         layout.addWidget(self.tb_thresholdMax)
 
@@ -89,8 +98,7 @@ class Ui_ThresholdWindow(QDialog):
         self.setLayout(layout)
         print('{}{}'.format(self.tb_thresholdVal.value(),self.tb_thresholdMax.value()))
     def thresholdvalchange(self):
-        self.Signal_OneParameter.emit(self.tb_thresholdVal.value(),self.tb_thresholdMax.value(),self.threshold_flag[self.com_box.currentText()])
-    def thresholdMaxvalchange(self,value):
+        self.valshow.setText(str(self.tb_thresholdVal.value()))
         self.Signal_OneParameter.emit(self.tb_thresholdVal.value(),self.tb_thresholdMax.value(),self.threshold_flag[self.com_box.currentText()])
 
 
