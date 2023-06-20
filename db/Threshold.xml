@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding = "UTF-8"?>
+<Info>
+<Field Index="0" Name="THRESH_BINARY"/>
+<Field Index="1" Name="THRESH_BINARY_INV"/>
+<Field Index="2" Name="THRESH_TRUNC"/>
+<Field Index="3" Name="THRESH_TOZERO"/>
+<Field Index="4" Name="THRESH_TOZERO_INV"/>
+<Field Index="8" Name="THRESH_OTSU"/>
+<Field Index="16" Name="THRESH_TRIANGLE"/>
+</Info>
