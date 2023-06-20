@@ -549,17 +549,12 @@ class Algorithm(object):
         :return:返回图像阈値操位结果
         '''
         try:
-
             if type == 8 :
                 rec_img = cv2.cvtColor(rec_img, cv2.COLOR_BGR2GRAY)
                 num, thre_img = cv2.threshold(rec_img, thresh, maxval, 0|8)
-                cv2.putText(thre_img, 'AutoThreshold{}'.format(int(num)), (10, 500), cv2.FONT_HERSHEY_SIMPLEX,
-                            0.5, (0, 0, 255), 1)
             elif type ==16 :
                 rec_img = cv2.cvtColor(rec_img, cv2.COLOR_BGR2GRAY)
                 num, thre_img = cv2.threshold(rec_img, thresh, maxval, 0|16)
-                cv2.putText(thre_img, 'AutoThreshold{}'.format(int(num)), (10, 500), cv2.FONT_HERSHEY_SIMPLEX,
-                            0.5, (0, 0, 255), 1)
             else:
                 _,thre_img  = cv2.threshold(rec_img, thresh, maxval,type)
             return thre_img
