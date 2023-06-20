@@ -1,7 +1,7 @@
 README
 ===========================
 
-该文件用来测试和展示书写README的各种markdown语法。GitHub的markdown语法在标准的markdown语法基础上做了扩充，称之为`GitHub Flavored Markdown`。简称`GFM`，GFM在GitHub上有广泛应用，除了README文件外，issues和wiki均支持markdown语法。
+该文件用Python-OpenCV编写，导入图片后可以使用OpenCV中的图像处理算法进行图像的处理，根据处理结果查看最佳的预处理算法。
 ****
 ## 目录
 * [横线](#横线)
