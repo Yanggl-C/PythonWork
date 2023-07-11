@@ -92,11 +92,8 @@ class Ui_ThresholdWindow(QDialog):
         #tb_threshold.setOrientation(Qt.Horizontal)
         layout.addWidget(self.tb_thresholdMax)
 
-        btn_ok = QPushButton()
-        self.tb_thresholdMax.setOrientation(Qt.Horizontal)
-        layout.addWidget(self.tb_thresholdMax)
         self.setLayout(layout)
-        print('{}{}'.format(self.tb_thresholdVal.value(),self.tb_thresholdMax.value()))
+       # print('{}{}'.format(self.tb_thresholdVal.value(),self.tb_thresholdMax.value()))
     def thresholdvalchange(self):
         self.valshow.setText(str(self.tb_thresholdVal.value()))
         self.Signal_OneParameter.emit(self.tb_thresholdVal.value(),self.tb_thresholdMax.value(),self.threshold_flag[self.com_box.currentText()])

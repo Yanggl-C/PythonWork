@@ -20,7 +20,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QImage, QPixmap
 
 import ThresholdWindow
-import AdapterThresholdWindow
 import numpy as np
 import copy
 import cv2
@@ -108,8 +107,6 @@ class Ui_MainWindow(object):
 
         self.flag_thresholdVal = False
         self.flag_thresholdMax = False
-
-        self.flag_AdapterThresholdVal = False
         # 添加事件
         self.btn_ReadPath.clicked.connect(self.btn_ReadPath_clicked)
         self.btn_ReadPath_2.clicked.connect(self.btn_ReadPath_2_clicked)
@@ -259,15 +256,12 @@ class Ui_MainWindow(object):
             # if thre_img is not None:
             #     self.show_img(False, thre_img, self.lab_showImg)
             self.openThresholdDialog()
-        elif str_algorithm=="AdapterThreshold":
-            self.openAdapterThresholdDialog()
     def btn_procressimg_2_clicked(self):
         pass
 
     def show_img(self,gray, img, console):
         '''
         图片显示
-        :param gray: 是否是灰度 是True否False
         :param img: 图片
         :param console: 显示图片控件
         :return:
@@ -291,16 +285,7 @@ class Ui_MainWindow(object):
         self.dialog.Signal_OneParameter.connect(self.thresholdValchange)
         #dialog.exec_()
         self.dialog.show()
-    def openAdapterThresholdDialog(self):
-        '''
-        打处理算法类
-        :return:
-        '''
-        self.dialog = AdapterThresholdWindow.Ui_AdapterThresholdWindow()
-        self.dialog.setWindowModality(Qt.ApplicationModal)
-        self.dialog.Signal_AdapterThreshold_Parameter.connect(self.AdapterthresholdValchange)
-        #dialog.exec_()
-        self.dialog.show()
+
     def thresholdValchange(self,val,max,flag):
         if self.flag_thresholdVal == False:
             self.flag_thresholdVal = True
@@ -312,14 +297,6 @@ class Ui_MainWindow(object):
                 self.show_img(True,thre_img,self.lab_showImg)
             else:
                 self.show_img(False,thre_img,self.lab_showImg)
-    def AdapterthresholdValchange(self,method,type,blocksize):
-        # if self.flag_AdapterThresholdVal == False:
-        #     self.flag_AdapterThresholdVal = True
-        #     return
-        algorithm = Algorithm()
-        thre_img = algorithm.AdapterThreshold(self.img_cp,method,type,blocksize)
-        if thre_img is not None:
-            self.show_img(True, thre_img, self.lab_showImg)
     def is_contains_chinese(self, strs):
         '''
         是否有中文字符
@@ -580,16 +557,6 @@ class Algorithm(object):
                 num, thre_img = cv2.threshold(rec_img, thresh, maxval, 0|16)
             else:
                 _,thre_img  = cv2.threshold(rec_img, thresh, maxval,type)
-            return thre_img
-        except Exception as e:
-            QMessageBox.warning(None, "错误", "{}".format(str(e)))
-            return
-    def AdapterThreshold(self,rec_img,thresholdmethod,thresholdtype,blockSize):
-        try:
-            if len(rec_img.shape) == 3:
-                rec_img = cv2.cvtColor(rec_img, cv2.COLOR_BGR2GRAY)
-            #thre_img = cv2.adaptiveThreshold(rec_img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,thresholdtype,c)
-            thre_img = cv2.adaptiveThreshold(rec_img,255,thresholdmethod,thresholdtype,blockSize,0)
             return thre_img
         except Exception as e:
             QMessageBox.warning(None, "错误", "{}".format(str(e)))
