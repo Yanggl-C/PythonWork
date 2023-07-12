@@ -23,7 +23,6 @@ class Ui_ThresholdWindow(QDialog):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.filed_dict = {}
         self.init_ui()
 
     def init_ui(self):
@@ -42,11 +41,13 @@ class Ui_ThresholdWindow(QDialog):
         self.threshold_flag = {}
         file_xml = ET.parse(os.path.join(BASE_DIR,'db',"Threshold.xml"))
         if file_xml:
-            data_list = list(file_xml.getroot())
-        for data in data_list:
-            strN = str(data.get('Name'))
-            self.com_box.addItem(strN)
-            self.threshold_flag[strN] = int(data.get('Index'))
+            root = file_xml.getroot()
+        for tag in root:
+            if  tag.tag == 'Threshold':
+                for info in tag:
+                    strN = str(info.get('Name'))
+                    self.com_box.addItem(strN)
+                    self.threshold_flag[strN] = int(info.get('Index'))
         layout.addWidget(self.com_box)
 
         #添加标签

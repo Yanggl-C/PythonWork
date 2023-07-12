@@ -41,24 +41,26 @@ class Ui_AdapterThresholdWindow(QDialog):
         self.combox_blocksize = QtWidgets.QComboBox()
         self.threshold_flag = {}
 
-        file_xml = ET.parse(os.path.join(BASE_DIR,'db',"AdapterThreshold.xml"))
+        file_xml = ET.parse(os.path.join(BASE_DIR,'db',"Threshold.xml"))
         if file_xml:
             root = list(file_xml.getroot())
         for tag in root:
-            if tag.tag == 'ADAPTIVE_THRESH':
-                for info in tag:
-                    strN = str(info.tag)
-                    self.threshold_flag[strN] = int(info.text)
-                    self.combox_Method.addItem(strN)
-            if tag.tag == 'THRESH_BINARY':
-                for info in tag:
-                    strN = str(info.tag)
-                    self.threshold_flag[strN] = int(info.text)
-                    self.combox_Type.addItem(strN)
-            if tag.tag == 'BLOCK_SIZE':
-                for info in tag:
-                    strN = str(info.get('Index'))
-                    self.combox_blocksize.addItem(strN)
+            if tag.tag == "AdapterThreshold":
+                for tag in tag:
+                    if tag.tag == 'ADAPTIVE_THRESH':
+                        for info in tag:
+                            strN = str(info.tag)
+                            self.threshold_flag[strN] = int(info.text)
+                            self.combox_Method.addItem(strN)
+                    if tag.tag == 'THRESH_BINARY':
+                        for info in tag:
+                            strN = str(info.tag)
+                            self.threshold_flag[strN] = int(info.text)
+                            self.combox_Type.addItem(strN)
+                    if tag.tag == 'BLOCK_SIZE':
+                        for info in tag:
+                            strN = str(info.get('Index'))
+                            self.combox_blocksize.addItem(strN)
         #标签
         lbl = QLabel()
         lbl.setText('阈值算法:')

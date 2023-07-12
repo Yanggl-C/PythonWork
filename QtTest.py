@@ -19,8 +19,8 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QImage, QPixmap
 
-import ThresholdWindow
-import AdapterThresholdWindow
+import Ui_ThresholdWindow
+import Ui_AdapterThresholdWindow
 import numpy as np
 import copy
 import cv2
@@ -258,9 +258,9 @@ class Ui_MainWindow(object):
             # thre_img = algorithm.Threshold(self.img_cp,128,255,3)
             # if thre_img is not None:
             #     self.show_img(False, thre_img, self.lab_showImg)
-            self.openThresholdDialog()
+            self.openDialog(str_algorithm)
         elif str_algorithm=="AdapterThreshold":
-            self.openAdapterThresholdDialog()
+            self.openDialog(str_algorithm)
     def btn_procressimg_2_clicked(self):
         pass
 
@@ -281,26 +281,24 @@ class Ui_MainWindow(object):
         pix = QtGui.QPixmap.fromImage(frame)
         console.setPixmap(pix)
         console.update()
-    def openThresholdDialog(self):
+    def openDialog(self,algorithm):
         '''
-        打处理算法类
+        弹出对话框
+        :param algorithm: 算法类别
         :return:
         '''
-        self.dialog = ThresholdWindow.Ui_ThresholdWindow()
-        self.dialog.setWindowModality(Qt.ApplicationModal)
-        self.dialog.Signal_OneParameter.connect(self.thresholdValchange)
-        #dialog.exec_()
-        self.dialog.show()
-    def openAdapterThresholdDialog(self):
-        '''
-        打处理算法类
-        :return:
-        '''
-        self.dialog = AdapterThresholdWindow.Ui_AdapterThresholdWindow()
-        self.dialog.setWindowModality(Qt.ApplicationModal)
-        self.dialog.Signal_AdapterThreshold_Parameter.connect(self.AdapterthresholdValchange)
-        #dialog.exec_()
-        self.dialog.show()
+        if algorithm == 'Threshold':
+            self.dialog = Ui_ThresholdWindow.Ui_ThresholdWindow()
+            self.dialog.setWindowModality(Qt.ApplicationModal)
+            self.dialog.Signal_OneParameter.connect(self.thresholdValchange)
+            #dialog.exec_()
+            self.dialog.show()
+        if algorithm == "AdapterThreshold":
+            self.dialog = Ui_AdapterThresholdWindow.Ui_AdapterThresholdWindow()
+            self.dialog.setWindowModality(Qt.ApplicationModal)
+            self.dialog.Signal_AdapterThreshold_Parameter.connect(self.AdapterthresholdValchange)
+            # dialog.exec_()
+            self.dialog.show()
     def thresholdValchange(self,val,max,flag):
         if self.flag_thresholdVal == False:
             self.flag_thresholdVal = True
