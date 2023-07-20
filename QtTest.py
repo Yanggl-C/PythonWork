@@ -21,6 +21,7 @@ from PyQt5.QtGui import QImage, QPixmap
 
 import Ui_ThresholdWindow
 import Ui_AdapterThresholdWindow
+import Ui_LUTWindow
 import numpy as np
 import copy
 import cv2
@@ -261,6 +262,8 @@ class Ui_MainWindow(object):
             self.openDialog(str_algorithm)
         elif str_algorithm=="AdapterThreshold":
             self.openDialog(str_algorithm)
+        elif str_algorithm =="LUT":
+            self.openWidget()
     def btn_procressimg_2_clicked(self):
         pass
 
@@ -299,6 +302,11 @@ class Ui_MainWindow(object):
             self.dialog.Signal_AdapterThreshold_Parameter.connect(self.AdapterthresholdValchange)
             # dialog.exec_()
             self.dialog.show()
+    def openWidget(self):
+        self.widget = Ui_LUTWindow.Ui_LUTWindow()
+        self.widget.setWindowModality(Qt.ApplicationModal)
+        self.widget.Signal_LUT_Parameter.connect(self.LUTValchange)
+        self.widget.show()
     def thresholdValchange(self,val,max,flag):
         if self.flag_thresholdVal == False:
             self.flag_thresholdVal = True
@@ -316,6 +324,11 @@ class Ui_MainWindow(object):
         #     return
         algorithm = Algorithm()
         thre_img = algorithm.AdapterThreshold(self.img_cp,method,type,blocksize)
+        if thre_img is not None:
+            self.show_img(True, thre_img, self.lab_showImg)
+    def LUTValchange(self,limit1,limit2,LUTNUM1,LUTNUM2,LUTNUM3):
+        algorithm = Algorithm()
+        thre_img = algorithm.LUT(self.img_cp,limit1,limit2,LUTNUM1,LUTNUM2,LUTNUM3)
         if thre_img is not None:
             self.show_img(True, thre_img, self.lab_showImg)
     def is_contains_chinese(self, strs):
@@ -588,6 +601,19 @@ class Algorithm(object):
                 rec_img = cv2.cvtColor(rec_img, cv2.COLOR_BGR2GRAY)
             #thre_img = cv2.adaptiveThreshold(rec_img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,thresholdtype,c)
             thre_img = cv2.adaptiveThreshold(rec_img,255,thresholdmethod,thresholdtype,blockSize,0)
+            return thre_img
+        except Exception as e:
+            QMessageBox.warning(None, "错误", "{}".format(str(e)))
+            return
+    def LUT(self,rec_img,limit1,limit2,lutnum1,lutnum2,lutnum3):
+        try:
+            if len(rec_img.shape) == 3:
+                rec_img = cv2.cvtColor(rec_img, cv2.COLOR_BGR2GRAY)
+            LUT_img = np.zeros(256,np.uint8)
+            LUT_img[0:limit1] = lutnum1
+            LUT_img[limit1:limit2] = lutnum2
+            LUT_img[limit2:] = lutnum3
+            thre_img = cv2.LUT(rec_img,LUT_img)
             return thre_img
         except Exception as e:
             QMessageBox.warning(None, "错误", "{}".format(str(e)))

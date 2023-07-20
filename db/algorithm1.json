@@ -1,3 +1,3 @@
-["Bgr2Gray","Bgr2YUV","Bgr2HSV", "Bgr2Lab","MinMaxLoc","Mean","MeanstdDev","Max","Min","bitwise_and","bitwise_or","bitwise_xor","bitwise_not","Threshold","AdapterThreshold","vcontcat","hcontcat","resize","flip","warpAffine","warpPerspective","warpPolar"]
+["Bgr2Gray","Bgr2YUV","Bgr2HSV", "Bgr2Lab","MinMaxLoc","Mean","MeanstdDev","Max","Min","bitwise_and","bitwise_or","bitwise_xor","bitwise_not","Threshold","AdapterThreshold","LUT","vcontcat","hcontcat","resize","flip","warpAffine","warpPerspective","warpPolar"]
 
 

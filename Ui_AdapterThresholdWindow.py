@@ -88,8 +88,6 @@ class Ui_AdapterThresholdWindow(QDialog):
         layout.addWidget(btn_ok)
         self.setLayout(layout)
     def ok_clicked(self):
-        print(self.threshold_flag[str(self.combox_Method.currentText())])
-        print(self.threshold_flag[str(self.combox_Type.currentText())])
         self.Signal_AdapterThreshold_Parameter.emit(self.threshold_flag[str(self.combox_Method.currentText())],self.threshold_flag[str(self.combox_Type.currentText())],int(self.combox_blocksize.currentText()))
 
 
