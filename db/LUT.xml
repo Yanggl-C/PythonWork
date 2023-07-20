@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding = "UTF-8"?>
+<Info>
+    <LUT>
+        <Field Index="85" Name="Limit1"/>
+        <Field Index="170" Name="Limit2"/>
+        <Field Index="100" Name="LUTNUM1"/>
+        <Field Index="150" Name="LUTNUM2"/>
+        <Field Index="255" Name="LUTNUM3"/>
+    </LUT>>
+</Info>
