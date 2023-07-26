@@ -10,7 +10,8 @@ import os.path
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QVBoxLayout,QDialog,QPushButton,QLabel,QLineEdit,QMessageBox,QTextEdit,QHBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout,QDialog,QPushButton,QLabel,QLineEdit,QMessageBox,QTextEdit,QHBoxLayout,QSizePolicy
+from PyQt5.QtGui import QPalette
 import sys
 import os
 import xml.etree.ElementTree as ET
@@ -32,9 +33,8 @@ class Ui_LUTWindow(QDialog):
         :return:
         """
         self.setWindowTitle("LUTSetting")
-        self.resize(300,200)
+        self.resize(255,200)
         layout = QVBoxLayout()
-        #读取文件中的标志
 
         self.spinbox_low = QtWidgets.QSpinBox()
         self.spinbox_high = QtWidgets.QSpinBox()
@@ -42,7 +42,7 @@ class Ui_LUTWindow(QDialog):
         self.spinbox_lut2 = QtWidgets.QSpinBox()
         self.spinbox_lut3 = QtWidgets.QSpinBox()
         self.num_LUT = {}
-
+        # 读取文件中的标志
         file_xml = ET.parse(os.path.join(BASE_DIR,'db',"LUT.xml"))
         if file_xml:
             root = list(file_xml.getroot())
@@ -82,7 +82,45 @@ class Ui_LUTWindow(QDialog):
         map_layout.addWidget(lbl)
 
         layout.addLayout(map_layout)
+        #显示范围图像
+        backimg_layout = QHBoxLayout()
 
+        # 范围显示label1
+        self.label_show_limit1 =  QLabel()
+        # self.pixelmap1 = QtGui.QPixmap(os.path.join(BASE_DIR,'ico',"lablimitbackgr1.png"))
+        # self.label_show_limit1.setPixmap(self.pixelmap1)
+        pe = QPalette()
+        pe.setColor(QPalette.Background,Qt.lightGray)
+        self.label_show_limit1.setPalette(pe)
+        self.label_show_limit1.setAutoFillBackground(True)
+        self.label_show_limit1.setScaledContents(True)
+        self.label_show_limit1.setFixedSize(int(self.spinbox_low.value()),10)
+        backimg_layout.addWidget(self.label_show_limit1)
+
+        # 范围显示label2
+        self.label_show_limit2 =  QLabel()
+        # self.pixelmap2 = QtGui.QPixmap(os.path.join(BASE_DIR,'ico',"lablimitbackgr2.png"))
+        # self.label_show_limit2.setPixmap(self.pixelmap2)
+        pe = QPalette()
+        pe.setColor(QPalette.Background,Qt.black)
+        self.label_show_limit2.setPalette(pe)
+        self.label_show_limit2.setAutoFillBackground(True)
+        self.label_show_limit2.setScaledContents(True)
+        self.label_show_limit2.setFixedSize(int(self.spinbox_high.value() - self.spinbox_low.value()), 10)
+        backimg_layout.addWidget(self.label_show_limit2)
+
+        #范围显示label3
+        self.label_show_limit3 =  QLabel()
+        # self.pixelmap3 = QtGui.QPixmap(os.path.join(BASE_DIR,'ico',"lablimitbackgr3.png"))
+        # self.label_show_limit3.setPixmap(self.pixelmap3)
+        pe = QPalette()
+        pe.setColor(QPalette.Background,Qt.blue)
+        self.label_show_limit3.setPalette(pe)
+        self.label_show_limit3.setAutoFillBackground(True)
+        self.label_show_limit3.setScaledContents(True)
+        self.label_show_limit3.setFixedSize(int(255-int(self.spinbox_high.value())),10)
+        backimg_layout.addWidget(self.label_show_limit3)
+        layout.addLayout(backimg_layout)
         #标签
         lbl = QLabel()
         lbl.setText('映射阈值:')
@@ -103,34 +141,33 @@ class Ui_LUTWindow(QDialog):
         map_layout.addWidget(self.spinbox_lut3)
         map_layout.addStretch()
         layout.addLayout(map_layout)
+
         #OK按钮
-        map_layout = QHBoxLayout()
-        map_layout.addStretch()
         btn_ok = QPushButton()
         btn_ok.setText("OK")
         btn_ok.clicked.connect(self.ok_clicked)
-        map_layout.addWidget(btn_ok)
-        map_layout.addStretch()
-
         layout.addWidget(btn_ok)
         self.setLayout(layout)
     def spinbox_low_changed(self):
         if self.spinbox_low.value() > self.spinbox_high.value():
             self.spinbox_low.setValue(self.spinbox_high.value())
         self.spinbox_high.setMinimum(self.spinbox_low.value())
+        self.label_show_limit1.setFixedSize(int(self.spinbox_low.value()),10)
+        self.label_show_limit2.setFixedSize(int(self.spinbox_high.value() - self.spinbox_low.value()), 10)
+        self.label_show_limit1.update()
+        self.label_show_limit2.update()
+        self.update()
+
     def spinbox_high_changed(self):
         self.spinbox_low.setMaximum(self.spinbox_high.value())
         if self.spinbox_high.value() < self.spinbox_low.value():
             self.spinbox_high.setValue(self.spinbox_low.value())
+        self.label_show_limit2.setFixedSize( int(self.spinbox_high.value()-self.spinbox_low.value()),10)
+        self.label_show_limit3.setFixedSize(int(255-int(self.spinbox_high.value())),10)
+        self.label_show_limit2.update()
+        self.label_show_limit3.update()
+        self.update()
     def ok_clicked(self):
-        file_xml = ET.parse(os.path.join(BASE_DIR,'db',"LUT.xml"))
-        if file_xml:
-            for tag in file_xml.findall('LUT'):
-                tag.set('Limit1',str(self.spinbox_low.value()))
-                tag.set('Limit2',str(self.spinbox_high.value()))
-                tag.set('LUTNUM1',str(self.spinbox_lut1.value()))
-                tag.set('LUTNUM2',str(self.spinbox_lut2.value()))
-                tag.set('LUTNUM3',str(self.spinbox_lut3.value()))
         self.Signal_LUT_Parameter.emit(self.spinbox_low.value(),self.spinbox_high.value(),self.spinbox_lut1.value(),self.spinbox_lut2.value(),self.spinbox_lut3.value())
 
 
